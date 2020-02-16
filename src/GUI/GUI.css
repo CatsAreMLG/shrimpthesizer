@@ -1,0 +1,42 @@
+.gui-container {
+  display: grid;
+  grid-template-areas:
+    "waveform header header header header header"
+    "waveform main main main ben ben"
+    "waveform footer footer footer footer footer";
+  grid-gap: 10px;
+  padding: 10px;
+  color: white;
+  position: absolute;
+  width: 75%;
+  height: 75%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgb(46, 46, 61);
+  border-radius: 5px;
+}
+
+.gui-waveform {
+  grid-area: waveform;
+  border: 1px solid grey;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.gui-waveform-btn {
+  width: 75%;
+  margin: auto;
+  padding: 5px 0;
+  border: 1px solid grey;
+  border-radius: 5px 5px 0 0;
+}
+
+.gui-waveform-choices {
+  position: relative;
+  width: 75%;
+  margin: auto;
+  border: 1px solid grey;
+  border-top: 0;
+  border-radius: 0 0 5px 5px;
+}

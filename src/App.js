@@ -1,29 +1,29 @@
-import React, {useState} from 'react';
-import * as Tone from "tone";
+import React, { useState } from "react"
+import * as Tone from "tone"
 
-import GUI from './GUI/GUI'
-import keys from './data/keys'
-import './App.css';
+import GUI from "./GUI/GUI"
+import keys from "./data/keys"
+import "./App.css"
 
 //create a synth and connect it to the master output (your speakers)
-let osc = {type:"sine"}
+let osc = { type: "triangle" }
 let env = {
-  attack : 0.1 ,
-  decay : 0.1 ,
-  sustain : 0.3 ,
-  release : 1
+  attack: 0.1,
+  decay: 0.1,
+  sustain: 0.3,
+  release: 1
 }
 
 function App() {
   const [down, setDown] = useState({})
-  const play = async (e) => {
+  const play = async e => {
     let key = e.key
     if (!down[key]) {
       if (keys[key]) {
         await Tone.start()
         let synth = new Tone.Synth({
-          oscillator : osc,
-          envelope : env
+          oscillator: osc,
+          envelope: env
         }).toMaster()
         synth.triggerAttack(keys[key])
         let newDown = down
@@ -46,7 +46,7 @@ function App() {
     <div className="App" onKeyDown={play} onKeyUp={stop} tabIndex="0">
       <GUI />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
