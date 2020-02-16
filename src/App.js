@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import * as Tone from "tone";
 
+import GUI from './GUI/GUI'
 import keys from './data/keys'
 import './App.css';
 
@@ -43,7 +44,7 @@ function App() {
   }
   return (
     <div className="App" onKeyDown={play} onKeyUp={stop} tabIndex="0">
-      hey
+      <GUI />
     </div>
   );
 }
