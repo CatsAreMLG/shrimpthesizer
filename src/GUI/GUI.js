@@ -40,11 +40,11 @@ const GUI = props => {
           </div>
           <div
             className="gui-waveform-choice"
-            style={props.waveform === "saw" ? { background: "grey" } : {}}
+            style={props.waveform === "sawtooth" ? { background: "grey" } : {}}
             onClick={handleClick}
-            name="saw"
+            name="sawtooth"
           >
-            saw
+            sawtooth
           </div>
           <div
             className="gui-waveform-choice"

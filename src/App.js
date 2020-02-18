@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import * as Tone from "tone"
+import { connect } from "react-redux"
 
 import GUI from "./GUI/GUI"
 import keys from "./data/keys"
@@ -14,17 +15,28 @@ let env = {
   release: 1
 }
 
-function App() {
+function App(props) {
   const [down, setDown] = useState({})
   const play = async e => {
     let key = e.key
     if (!down[key]) {
       if (keys[key]) {
         await Tone.start()
+
+        let tremolo = new Tone.Tremolo({
+          frequency: 0,
+          type: "sine",
+          depth: 0.25,
+          spread: 0
+        })
+          .toMaster()
+          .start()
+
         let synth = new Tone.Synth({
-          oscillator: osc,
+          oscillator: { type: props.waveform },
           envelope: env
-        }).toMaster()
+        }).chain(tremolo, Tone.Master)
+
         synth.triggerAttack(keys[key])
         let newDown = down
         newDown[key] = synth
@@ -49,4 +61,10 @@ function App() {
   )
 }
 
-export default App
+const mstp = state => {
+  return {
+    waveform: state.waveform
+  }
+}
+
+export default connect(mstp, {})(App)
