@@ -1,21 +1,18 @@
-import React, { useState } from "react"
-import * as Tone from "tone"
-import { connect } from "react-redux"
+import React, { useState, useEffect } from 'react'
+import * as Tone from 'tone'
+import { connect } from 'react-redux'
 
-import GUI from "./GUI/GUI"
-import keys from "./data/keys"
-import "./App.css"
-
-//create a synth and connect it to the master output (your speakers)
-let osc = { type: "triangle" }
-let env = {
-  attack: 0.1,
-  decay: 0.1,
-  sustain: 0.3,
-  release: 1
-}
+import GUI from './GUI/GUI.tsx'
+import keys from './data/keys'
+import { setAttack } from './redux/actions'
+import './App.css'
 
 function App(props) {
+  function useForceUpdate() {
+    const [value, setValue] = useState(0) // integer state
+    return () => setValue(value => ++value) // update the state to force render
+  }
+  const forceUpdate = useForceUpdate()
   const [down, setDown] = useState({})
   const play = async e => {
     let key = e.key
@@ -25,17 +22,22 @@ function App(props) {
 
         let tremolo = new Tone.Tremolo({
           frequency: 0,
-          type: "sine",
+          type: 'sine',
           depth: 0.25,
           spread: 0
         })
           .toMaster()
           .start()
-
+        var vol = new Tone.Volume(-20)
         let synth = new Tone.Synth({
           oscillator: { type: props.waveform },
-          envelope: env
-        }).chain(tremolo, Tone.Master)
+          envelope: {
+            attack: props.attack / 10 + 0.1,
+            decay: props.decay / 10 + 0.1,
+            sustain: props.sustain / 10 + 0.1,
+            release: props.release / 10 + 0.1
+          }
+        }).chain(vol, Tone.Master)
 
         synth.triggerAttack(keys[key])
         let newDown = down
@@ -45,7 +47,6 @@ function App(props) {
     }
   }
   const stop = e => {
-    console.log(down)
     let key = e.key
     if (down[key]) {
       down[key].triggerRelease()
@@ -54,6 +55,7 @@ function App(props) {
       setDown(newDown)
     }
   }
+
   return (
     <div className="App" onKeyDown={play} onKeyUp={stop} tabIndex="0">
       <GUI />
@@ -63,8 +65,12 @@ function App(props) {
 
 const mstp = state => {
   return {
-    waveform: state.waveform
+    waveform: state.waveform,
+    attack: state.attack,
+    decay: state.decay,
+    sustain: state.sustain,
+    release: state.release
   }
 }
 
-export default connect(mstp, {})(App)
+export default connect(mstp, { setAttack })(App)
